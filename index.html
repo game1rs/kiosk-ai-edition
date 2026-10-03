@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#090b09" />
+  <title>KIOSK — A slow-burn horror game</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Special+Elite&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div id="game"></div>
+  <div id="pixel-filter" aria-hidden="true"></div>
+  <div id="vignette" aria-hidden="true"></div>
+  <div id="noise" aria-hidden="true"></div>
+
+  <main id="menu" class="screen visible">
+    <div class="menu-kicker">A GAME BY NIGHT WINDOW</div>
+    <h1>KIOSK</h1>
+    <p class="menu-subtitle" data-i18n="tagline">EVERY ORDER LEAVES A TRACE</p>
+    <div class="date-stamp">JUNE 21, 1986 &nbsp;·&nbsp; 11:47 PM</div>
+    <div class="menu-actions">
+      <button id="new-game" class="primary" data-i18n="newGame">BEGIN NIGHT ONE</button>
+      <button id="continue-game" data-i18n="continue">CONTINUE</button>
+      <button id="open-settings" data-i18n="settings">SETTINGS</button>
+      <button id="open-credits" data-i18n="about">THE MISSING BOY</button>
+    </div>
+    <div class="menu-footer">
+      <span>WASD <b data-i18n="move">MOVE</b></span>
+      <span>RMB <b data-i18n="drag">DRAG</b></span>
+      <span>LMB <b data-i18n="interact">INTERACT</b></span>
+      <span>ESC <b data-i18n="pause">PAUSE</b></span>
+    </div>
+  </main>
+
+  <section id="intro" class="screen paper-screen hidden">
+    <article class="newspaper">
+      <div class="paper-date">SATURDAY, JUNE 21, 1986 &nbsp; • &nbsp; LATE EDITION</div>
+      <h2 data-i18n="missingHeadline">LOCAL KIOSK WORKER STILL MISSING</h2>
+      <div class="paper-rule"></div>
+      <div class="newspaper-grid">
+        <div class="missing-photo"><div class="portrait-silhouette"></div><b>MILO KARA</b><small>AGE 22</small></div>
+        <div>
+          <p data-i18n="missingStory">Twenty-two-year-old Milo Kara was last seen closing the Night Window kiosk on June 16. Police found the shop unlocked, the lights on, and a meal left burning on the grill.</p>
+          <p data-i18n="missingStory2">Five days later, there is still no trace of him. You have accepted his old shift. The owner only gave one instruction: keep the window open.</p>
+          <blockquote>“He would never leave without saying goodbye.”</blockquote>
+        </div>
+      </div>
+      <button id="enter-kiosk" class="ink-button" data-i18n="clockIn">CLOCK IN</button>
+    </article>
+  </section>
+
+  <section id="settings-panel" class="modal hidden">
+    <div class="panel settings-panel">
+      <header><div><small>CONFIGURATION</small><h2 data-i18n="settings">SETTINGS</h2></div><button class="close-modal">×</button></header>
+      <label><span data-i18n="language">LANGUAGE</span><select id="language">
+        <option value="en">English</option><option value="es">Español</option><option value="fr">Français</option>
+        <option value="tr">Türkçe</option><option value="ar">العربية</option>
+      </select></label>
+      <label><span data-i18n="graphics">GRAPHICS</span><select id="quality"><option value="low">LOW — AUTHENTIC</option><option value="verylow">VERY LOW — VHS</option><option value="medium">MEDIUM</option></select></label>
+      <label><span data-i18n="sensitivity">MOUSE SENSITIVITY</span><input id="sensitivity" type="range" min="0.2" max="2" step="0.1" value="0.8"><output>0.8</output></label>
+      <label><span data-i18n="volume">MASTER VOLUME</span><input id="volume" type="range" min="0" max="1" step="0.05" value="0.65"><output>65%</output></label>
+      <label><span data-i18n="ambience">AMBIENCE</span><input id="ambience-volume" type="range" min="0" max="1" step="0.05" value="0.55"><output>55%</output></label>
+      <label class="toggle"><span data-i18n="subtitles">SUBTITLES</span><input id="subtitles-toggle" type="checkbox" checked><i></i></label>
+      <label class="toggle"><span data-i18n="voices">CUSTOMER VOICES</span><input id="voices-toggle" type="checkbox" checked><i></i></label>
+      <label class="toggle"><span data-i18n="shadows">DYNAMIC SHADOWS</span><input id="shadows-toggle" type="checkbox"><i></i></label>
+      <button id="fullscreen" data-i18n="fullscreen">TOGGLE FULLSCREEN</button>
+      <p class="settings-note">Low resolution and film grain are intentional.</p>
+    </div>
+  </section>
+
+  <section id="about-panel" class="modal hidden">
+    <div class="panel file-panel">
+      <header><div><small>CASE 86-0616</small><h2 data-i18n="caseFile">THE MISSING BOY</h2></div><button class="close-modal">×</button></header>
+      <div class="case-photo"><div class="portrait-silhouette"></div><strong>MILO KARA, 22</strong></div>
+      <p data-i18n="caseText">Last seen at 11:42 PM on June 16, 1986, working alone at the Kiosk on Bellweather Road. No body. No witnesses. No sign of forced entry.</p>
+      <div class="redacted">██████ WITNESS STATEMENT █████████</div>
+      <p class="type-note">The truth is in the orders. Pay attention to what they say.</p>
+    </div>
+  </section>
+
+  <section id="pause-panel" class="modal hidden">
+    <div class="panel pause-panel">
+      <small>SHIFT SUSPENDED</small><h2>KIOSK</h2>
+      <button id="resume" class="primary" data-i18n="resume">RETURN TO SHIFT</button>
+      <button id="pause-settings" data-i18n="settings">SETTINGS</button>
+      <button id="to-menu" data-i18n="mainMenu">SAVE & EXIT TO MENU</button>
+    </div>
+  </section>
+
+  <section id="recipe-panel" class="modal book-modal hidden">
+    <div class="recipe-book">
+      <button class="close-modal book-close">×</button>
+      <div class="book-spine"></div>
+      <div class="book-page left-page">
+        <small>NIGHT WINDOW • EST. 1972</small>
+        <h2 data-i18n="recipeBook">RECIPE BOOK</h2>
+        <p class="scribble">Milo — stop changing the recipes.<br>— D.</p>
+        <nav id="recipe-tabs"></nav>
+      </div>
+      <div class="book-page right-page" id="recipe-content"></div>
+    </div>
+  </section>
+
+  <section id="delivery-panel" class="modal hidden">
+    <div class="panel delivery-panel">
+      <header><div><small>BELLWEATHER WHOLESALE</small><h2 data-i18n="delivery">DELIVERY ORDER</h2></div><button class="close-modal">×</button></header>
+      <p data-i18n="deliveryHelp">Choose one crate. It will be left outside the back door. Drag it onto the red unpacking mat.</p>
+      <div id="delivery-list"></div>
+      <footer><span>ACCOUNT: NW-0616</span><span id="delivery-status">LINE READY</span></footer>
+    </div>
+  </section>
+
+  <section id="note-panel" class="modal hidden">
+    <article class="found-note">
+      <button class="close-modal">×</button>
+      <small id="note-date"></small>
+      <p id="note-text"></p>
+      <div id="note-signature">— M.</div>
+    </article>
+  </section>
+
+  <section id="ending" class="screen ending-screen hidden">
+    <div class="ending-copy">
+      <small>CASE 86-0616 — CLOSED</small>
+      <h2 id="ending-title">THE WINDOW IS SHUT</h2>
+      <p id="ending-text">At 4:13 AM, police found Milo Kara beneath the old cold-room floor. His killer never left the kiosk alive.</p>
+      <div class="ending-rule"></div>
+      <p class="ending-quote">Some places remember everyone who works the night shift.</p>
+      <button id="ending-menu">RETURN TO TITLE</button>
+    </div>
+  </section>
+
+  <div id="hud" class="hidden">
+    <div id="day-card"><small id="shift-label">NIGHT SHIFT</small><strong><span data-i18n="day">DAY</span> <b id="day-num">1</b> / 5</strong><em id="game-clock">11:47 PM</em></div>
+    <div id="objective"><small data-i18n="objective">CURRENT TASK</small><span id="objective-text">Wait for a customer at the front window.</span></div>
+    <div id="order-ticket" class="hidden">
+      <div class="ticket-top"><span>ORDER</span><b id="order-number">#0617</b></div>
+      <h3 id="customer-name">CUSTOMER</h3>
+      <div id="order-name">Classic Burger</div>
+      <ul id="order-items"></ul>
+      <small>NO EXPIRY • CUSTOMER WAITS</small>
+    </div>
+    <div id="stock-peek" class="hidden"></div>
+    <div id="power-warning" class="hidden">⚠ <span data-i18n="powerOut">MAIN POWER FAILURE</span></div>
+    <div id="crosshair"><i></i><i></i><i></i><i></i><b></b></div>
+    <div id="prompt" class="hidden"><kbd>LMB</kbd><span>INTERACT</span></div>
+    <div id="held-label" class="hidden"><small>HOLDING — RELEASE RMB TO DROP</small><b></b></div>
+    <div id="subtitle" class="hidden"><b></b><span></span></div>
+    <div id="notification" class="hidden"></div>
+    <div id="controls-hint"><span><kbd>WASD</kbd> MOVE</span><span><kbd>RMB</kbd> HOLD / DRAG</span><span><kbd>LMB</kbd> USE</span><span><kbd>B</kbd> RECIPES</span></div>
+    <div id="journal"><small>SHIFT LOG</small><div id="clues"></div></div>
+  </div>
+
+  <script type="module" src="/src/main.js"></script>
+</body>
+</html>
